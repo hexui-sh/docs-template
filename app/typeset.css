@@ -12,15 +12,11 @@
     --typeset-leading: 1.75;
     --typeset-flow: 1.25em;
     font-family: var(--typeset-font-body);
-    font-size: calc(var(--typeset-size) * 1.125);
+    font-size: var(--typeset-size);
     line-height: var(--typeset-leading);
     color: var(--color-foreground, currentColor);
     overflow-wrap: break-word;
     margin-trim: block-start;
-
-    @media (min-width: 48rem), print {
-      font-size: var(--typeset-size);
-    }
 
     --typeset-muted: var(
       --color-muted-foreground,
