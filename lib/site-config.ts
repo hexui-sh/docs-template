@@ -37,7 +37,7 @@ export const siteConfig = {
 
   /** Project links. */
   links: {
-    github: "https://github.com/hex-ui/hex-ui",
+    github: "https://github.com/hexui-sh/docs-template",
   },
 
   nav: [
@@ -47,16 +47,14 @@ export const siteConfig = {
     })),
     {
       title: "GitHub",
-      href: "https://github.com/hex-ui/hex-ui",
+      href: "https://github.com/hexui-sh/docs-template",
       external: true,
     },
   ] as NavLink[],
 
   /** Social links shown in the footer. */
   socials: [
-    { title: "GitHub", href: "https://github.com/hex-ui/hex-ui", icon: "github" },
-    { title: "X", href: "https://x.com/hexui", icon: "x" },
-    { title: "Discord", href: "https://discord.gg/hexui", icon: "discord" },
+    { title: "GitHub", href: "https://github.com/hexui-sh/docs-template", icon: "github" },
   ] satisfies SocialLink[],
 } as const;
 
