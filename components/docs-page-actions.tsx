@@ -14,7 +14,7 @@ export function DocsPageActions({
     <div className="inline-flex items-stretch">
       <MarkdownCopyButton
         markdownUrl={markdownUrl}
-        className="rounded-r-none! border-0"
+        className="rounded-r-none! border-0 whitespace-nowrap"
       />
       <DocsViewOptionsPopover
         markdownUrl={markdownUrl}
