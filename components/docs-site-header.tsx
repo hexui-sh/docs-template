@@ -18,7 +18,7 @@ export function DocsSiteHeader() {
   const SidebarTrigger = slots.sidebar?.trigger;
 
   return (
-    <header className="sticky top-(--fd-docs-row-1) z-30 bg-background pb-3 [grid-area:header] after:pointer-events-none after:absolute after:bottom-3 after:left-1/2 after:w-screen after:-translate-x-1/2 after:border-b after:content-[''] layout:[--fd-header-height:--spacing(28)]">
+    <header className="sticky top-(--fd-docs-row-1) z-30 bg-background [grid-area:header] after:pointer-events-none after:absolute after:bottom-0 after:left-1/2 after:w-screen after:-translate-x-1/2 after:border-b after:content-[''] layout:[--fd-header-height:--spacing(28)]">
       <div className="flex h-14 items-center gap-2 px-4 md:px-6">
         {SidebarTrigger ? (
           <SidebarTrigger
