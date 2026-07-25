@@ -30,27 +30,24 @@ export default async function Page({
   return (
     <DocsPage
       toc={page.data.toc}
-      breadcrumb={{
-        enabled: true,
-        includeRoot: false,
-        includePage: true,
-        includeSeparator: true,
-      }}
-      className="p-4 md:p-4 xl:p-4"
+      className="p-4 md:p-4 xl:p-4 mt-2"
       tableOfContent={{ container: { className: "p-4" } }}
+      tableOfContentPopover={{ enabled: false }}
       slots={{ footer: Footer }}
     >
-      <div className="flex w-full flex-col-reverse items-start justify-between gap-3 md:flex-row md:gap-2">
-        <div>
+      <div className="flex w-full flex-row items-start justify-between gap-2">
+        <div className="flex flex-col gap-2">
           <DocsTitle>{page.data.title}</DocsTitle>
           <DocsDescription className="text-base">
             {page.data.description}
           </DocsDescription>
         </div>
-        <DocsPageActions
-          markdownUrl={markdownUrl}
-          githubUrl={`https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/content/docs/${page.path}`}
-        />
+        <div className="hidden xl:block mt-2">
+          <DocsPageActions
+            markdownUrl={markdownUrl}
+            githubUrl={`https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/content/docs/${page.path}`}
+          />
+        </div>
       </div>
       <div className="typeset typeset-docs mdx-content flex-1">
         <MDX components={getMDXComponents()} />
