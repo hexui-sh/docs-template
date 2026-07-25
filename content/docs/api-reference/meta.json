@@ -1,0 +1,6 @@
+{
+  "title": "API Reference",
+  "icon": "SquareCode",
+  "root": true,
+  "pages": ["overview", "components", "hooks", "utilities", "types"]
+}

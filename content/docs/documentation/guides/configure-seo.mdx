@@ -1,0 +1,63 @@
+---
+title: Configure SEO
+description: Set the canonical site identity and create useful metadata for every documentation page.
+---
+
+## 1. Set the production origin
+
+```ts title="lib/site-config.ts"
+export const siteConfig = {
+  name: "Acme Docs",
+  description: "Developer documentation for the Acme platform.",
+  tagline: "Integrate with Acme.",
+  url: "https://docs.acme.com",
+  // ...
+} as const;
+```
+
+Use the final HTTPS origin without a trailing path.
+
+## 2. Review root metadata
+
+```tsx title="app/layout.tsx"
+export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.url),
+  title: {
+    default: `${siteConfig.name} – ${siteConfig.tagline}`,
+    template: `%s | ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
+};
+```
+
+## 3. Write page frontmatter
+
+```mdx
+---
+title: API Authentication
+description: Create and rotate access tokens for Acme API requests.
+---
+```
+
+Avoid duplicated titles and generic descriptions such as “Learn more.”
+
+## 4. Add canonical URLs
+
+In `generateMetadata()`:
+
+```tsx
+alternates: {
+  canonical: new URL(page.url, siteConfig.url),
+},
+```
+
+## 5. Add discoverability routes
+
+Create a Next.js `app/sitemap.ts` from `source.getPages()` and an `app/robots.ts` that references it. Exclude private or preview deployments through environment-aware configuration.
+
+## 6. Verify
+
+Run a production build, view page source, and test the deployed canonical URL with search-engine and social-preview tools.
+
+> Warning: Do not configure the unused `getPageImage()` URL as an Open Graph image until you implement its corresponding route.
+

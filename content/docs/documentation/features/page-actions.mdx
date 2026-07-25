@@ -1,0 +1,54 @@
+---
+title: Page Actions and Pagination
+description: Explain Markdown copying, source links, AI-reader links, and previous/next navigation.
+---
+
+## Overview
+
+Each page includes a split action button and footer pagination. Readers can copy processed Markdown, open the source, send the page URL to supported assistants, or move to the adjacent page.
+
+## File locations
+
+- `components/docs-page-actions.tsx`: copy button and popover composition.
+- `components/docs-view-options-popover.tsx`: source and provider links.
+- `components/docs-footer.tsx`: previous/next items.
+- `lib/source.ts`: raw Markdown URL construction.
+- `lib/shared.ts`: content route and Git repository settings.
+
+## Architecture
+
+```tsx title="app/[[...slug]]/page.tsx"
+<DocsPageActions
+  markdownUrl={getPageMarkdownUrl(page).url}
+  githubUrl={`https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/content/docs/${page.path}`}
+/>
+```
+
+The footer reads the page tree with `useFooterItems()` and locates the active pathname. This keeps pagination consistent with sidebar order.
+
+## Configure source links
+
+```ts title="lib/shared.ts"
+export const gitConfig = {
+  user: "acme",
+  repo: "platform-docs",
+  branch: "main",
+};
+```
+
+## Add a provider action
+
+In `DocsViewOptionsPopover`, append an item:
+
+```tsx
+{
+  title: "Open in internal assistant",
+  href: `https://assistant.acme.com/new?${new URLSearchParams({ url: String(pageUrl) })}`,
+  icon: <Bot />,
+}
+```
+
+Always encode query parameters with `URLSearchParams` and open external links with `noopener noreferrer`.
+
+> Warning: The raw Markdown URL uses `docsContentRoute`. Verify the corresponding route exists in your deployed integration; otherwise hide the copy/view actions or implement the route before launch.
+

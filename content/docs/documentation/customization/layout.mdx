@@ -1,0 +1,69 @@
+---
+title: Layout
+description: Adjust the documentation shell, content width, sidebar, table of contents, header, and footer.
+---
+
+The layout is assembled in `app/layout.tsx`. Shared Fumadocs options come from `lib/layout.shared.tsx`; local header and footer implementations live in `components/`.
+
+## Change layout options
+
+```tsx title="app/layout.tsx"
+<DocsLayout
+  {...baseOptions()}
+  tree={source.getPageTree()}
+  nav={{ mode: "top" }}
+  tabs={false}
+  sidebar={{
+    collapsible: true,
+    defaultOpenLevel: 2,
+  }}
+>
+  {children}
+</DocsLayout>
+```
+
+Increasing `defaultOpenLevel` exposes more nested sections but creates a taller sidebar. Prefer one or two levels for large documentation sets.
+
+## Change the content width
+
+```css title="app/globals.css"
+:root {
+  --fd-layout-width: 1440px;
+}
+```
+
+The route can also adjust page and table-of-contents padding:
+
+```tsx title="app/[[...slug]]/page.tsx"
+<DocsPage
+  className="p-5 md:p-6"
+  tableOfContent={{ container: { className: "p-5" } }}
+>
+```
+
+## Customize the header
+
+`components/docs-site-header.tsx` renders a 56px primary row and a 44px collection row. If those heights change, update `--fd-header-height` in its layout class so the sticky sidebar and table of contents begin below the header.
+
+## Customize footer pagination
+
+`components/docs-footer.tsx` derives neighboring pages from the page tree. Pass explicit items only when a page needs non-linear navigation:
+
+```tsx
+<Footer
+  items={{
+    previous: { name: "Install", url: "/documentation/installation" },
+    next: { name: "Configure", url: "/documentation/configuration" },
+  }}
+/>
+```
+
+## Best practices
+
+- Test wide desktop, tablet, and narrow mobile viewports.
+- Keep keyboard focus visible in sticky and overflow containers.
+- Avoid fixed pixel widths for the content column.
+- Verify long titles and deeply nested navigation.
+
+> Tip: Change one structural dimension at a time. Header height, content width, and sidebar depth interact at smaller breakpoints.
+

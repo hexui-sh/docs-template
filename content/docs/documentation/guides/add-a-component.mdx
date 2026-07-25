@@ -1,0 +1,62 @@
+---
+title: Add a Component
+description: Build a typed React component and make it available to application code or MDX.
+---
+
+## 1. Choose its scope
+
+Use `components/ui` for a reusable primitive, a feature folder for domain UI, or a colocated file when only one route uses it.
+
+## 2. Implement the component
+
+```tsx title="components/ui/badge.tsx"
+import type { ComponentProps } from "react";
+import { cn } from "@/lib/utils";
+
+export function Badge({ className, ...props }: ComponentProps<"span">) {
+  return (
+    <span
+      className={cn(
+        "inline-flex rounded-full bg-muted px-2 py-0.5 text-xs font-medium",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+```
+
+Extending native props preserves standard accessibility and event types.
+
+## 3. Use it in React
+
+```tsx
+import { Badge } from "@/components/ui/badge";
+
+<Badge>Stable</Badge>
+```
+
+## 4. Optionally register it for MDX
+
+```tsx title="mdx-components.tsx"
+import { Badge } from "@/components/ui/badge";
+
+return {
+  ...defaultMdxComponents,
+  Badge,
+  ...components,
+};
+```
+
+Then author:
+
+```mdx
+Status: <Badge>Stable</Badge>
+```
+
+## 5. Verify
+
+Check keyboard behavior, light/dark colors, narrow screens, long content, and custom `className` merging. Run `pnpm lint` and `pnpm build`.
+
+> Note: Register only stable, frequently used editorial components globally. Import specialized components explicitly in the MDX page that uses them.
+

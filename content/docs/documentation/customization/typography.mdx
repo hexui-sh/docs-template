@@ -1,0 +1,68 @@
+---
+title: Typography
+description: Change the sans, mono, and heading fonts while preserving performance and readability.
+---
+
+The template loads Geist Sans and Geist Mono in `app/layout.tsx`, then exposes them through Tailwind tokens in `app/globals.css`.
+
+## Replace the fonts
+
+Load another `next/font` family and add its variables to `<html>`:
+
+```tsx title="app/layout.tsx"
+import { Inter, JetBrains_Mono } from "next/font/google";
+
+const sans = Inter({ subsets: ["latin"], variable: "--font-app-sans" });
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-app-mono",
+});
+
+<html lang="en" className={`${sans.variable} ${mono.variable} h-full`}>
+```
+
+Map the new variables:
+
+```css title="app/globals.css"
+@theme inline {
+  --font-sans: var(--font-app-sans);
+  --font-heading: var(--font-app-sans);
+  --font-mono: var(--font-app-mono), ui-monospace, monospace;
+}
+```
+
+## Use a dedicated heading font
+
+Create a third font variable and change only `--font-heading`. Apply it to an application component with `font-heading`:
+
+```tsx
+<h2 className="font-heading text-2xl font-semibold tracking-tight">
+  Authentication
+</h2>
+```
+
+## Tune document typography
+
+Fumadocs styles MDX prose. Use scoped selectors when a consistent content-wide adjustment is required:
+
+```css title="app/globals.css"
+.prose {
+  --fd-prose-width: 72ch;
+}
+
+.prose :where(h2) {
+  letter-spacing: -0.02em;
+}
+```
+
+Verify the actual generated class before adding a selector; prefer component `className` props for isolated changes.
+
+## Best practices
+
+- Use `next/font` or a self-hosted asset to avoid layout shifts.
+- Keep body text near 16px and code readable at mobile widths.
+- Limit font families and weights to reduce downloads.
+- Choose a mono font with distinct punctuation and zero/O shapes.
+
+> Tip: Typography is part of navigation. Clear heading scale and compact line length make long technical pages easier to scan.
+

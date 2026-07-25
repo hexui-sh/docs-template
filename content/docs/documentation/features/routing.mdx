@@ -1,0 +1,54 @@
+---
+title: Routing and Collections
+description: Learn how file paths become URLs and how collection roots and redirects work.
+---
+
+## Overview
+
+One optional catch-all App Router route serves the entire documentation site. A page's path under `content/docs` becomes its URL.
+
+```text
+content/docs/api-reference/utilities.mdx
+→ /api-reference/utilities
+```
+
+## File locations
+
+- `app/[[...slug]]/page.tsx` resolves, renders, and generates metadata.
+- `lib/source.ts` provides pages and static parameters.
+- `lib/docs-collections.ts` defines roots and redirects.
+
+## Architecture
+
+```tsx title="app/[[...slug]]/page.tsx"
+const { slug } = await params;
+const redirectPath = getDocsRedirect(slug);
+if (redirectPath) redirect(redirectPath);
+
+const page = source.getPage(slug);
+if (!page) notFound();
+```
+
+`generateStaticParams()` enumerates known pages for production. `generateMetadata()` reads each page title and description. Unknown paths render `app/not-found.tsx`.
+
+## Add a collection
+
+1. Create `content/docs/tutorials/meta.json` with `"root": true`.
+2. Add an introduction page.
+3. Add a record to `docsCollections`.
+4. Add `"tutorials"` to `content/docs/meta.json`.
+
+```json title="content/docs/tutorials/meta.json"
+{
+  "title": "Tutorials",
+  "root": true,
+  "pages": ["introduction"]
+}
+```
+
+## Customize a base URL
+
+`docsRoute` in `lib/shared.ts` is passed to the source loader. Changing it affects generated page URLs and requires matching route/layout changes; treat this as an architectural change and verify every internal link.
+
+> Warning: Moving an MDX file changes its URL. Add a redirect in `getDocsRedirect()` to preserve external links and search ranking.
+

@@ -1,0 +1,54 @@
+---
+title: Add a Page
+description: Create an MDX page, place it in navigation, and verify its route and metadata.
+---
+
+## 1. Choose the collection
+
+Put product guidance under `content/docs/documentation` and public API contracts under `content/docs/api-reference`. The file path becomes the URL.
+
+## 2. Create the MDX file
+
+````mdx title="content/docs/documentation/guides/authentication.mdx"
+---
+title: Authentication
+description: Authenticate requests with an API access token.
+icon: KeyRound
+---
+
+## Send a token
+
+```ts
+const response = await fetch("https://api.example.com/v1/projects", {
+  headers: { Authorization: `Bearer ${process.env.ACME_TOKEN}` },
+});
+```
+
+> Warning: Never expose a server token in browser code.
+````
+
+## 3. Add it to the sidebar
+
+```json title="content/docs/documentation/guides/meta.json"
+{
+  "title": "Guides",
+  "pages": ["authentication", "..."]
+}
+```
+
+## 4. Link to it
+
+```mdx
+Read [Authentication](/documentation/guides/authentication).
+```
+
+## 5. Verify
+
+Run `pnpm dev`, open `/documentation/guides/authentication`, and check the sidebar, breadcrumb, table of contents, search, browser title, and previous/next links. Finish with:
+
+```bash
+pnpm lint
+pnpm build
+```
+
+> Tip: Use lowercase kebab-case file names. Stable, descriptive URLs are easier to share and rarely need redirects.

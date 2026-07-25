@@ -1,0 +1,56 @@
+---
+title: Responsive Navigation
+description: Understand the desktop sidebar, mobile drawer, collection tabs, and accessible navigation behavior.
+---
+
+## Overview
+
+The notebook layout provides a collapsible desktop sidebar and a mobile drawer. A custom two-row header adds search, theme controls, and horizontally scrollable collection tabs.
+
+## File locations
+
+- `app/layout.tsx` configures `DocsLayout`.
+- `components/docs-site-header.tsx` composes the header.
+- `components/docs-category-nav.tsx` renders collection tabs.
+- `components/mobile-nav.tsx` is available for pages outside the docs layout.
+- `app/globals.css` positions the mobile drawer and hides tab scrollbars.
+
+## Architecture
+
+`DocsSiteHeader` obtains the notebook sidebar trigger from layout slots:
+
+```tsx
+const { slots } = useNotebookLayout();
+const SidebarTrigger = slots.sidebar?.trigger;
+
+<SidebarTrigger aria-label="Toggle navigation menu">
+  <PanelLeft aria-hidden="true" />
+</SidebarTrigger>
+```
+
+`DocsCategoryNav` matches the current path, sets `aria-current`, and scrolls the active tab into view after navigation.
+
+## Customize the sidebar
+
+```tsx title="app/layout.tsx"
+sidebar={{
+  collapsible: true,
+  defaultOpenLevel: 1,
+}}
+```
+
+Page grouping and order come from `meta.json`, not this component.
+
+## Customize breakpoints
+
+The header uses Tailwind's `md` breakpoint for desktop search and the mobile trigger. If you change it, update all complementary `md:hidden` and `max-md:hidden` classes together.
+
+## Accessibility checklist
+
+- Tab through the sidebar, search, theme switch, and collection tabs.
+- Confirm the drawer closes and focus remains visible.
+- Test 200% browser zoom.
+- Ensure long labels remain reachable in horizontal overflow.
+
+> Note: `MobileNavMenu` is not used inside the current documentation layout; it is a reusable menu for future marketing or standalone pages.
+

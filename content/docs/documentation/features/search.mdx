@@ -1,0 +1,58 @@
+---
+title: Search
+description: Understand and customize the built-in full-text documentation search.
+---
+
+## Overview
+
+The header search opens with a click or `Ctrl/⌘ + K`. It indexes documentation titles, descriptions, headings, and body content through Fumadocs' Orama integration.
+
+## File locations
+
+- `app/api/search/route.ts` exposes the search index.
+- `lib/source.ts` supplies page content.
+- `components/docs-site-header.tsx` renders desktop and mobile triggers.
+- `app/layout.tsx` provides search context through `RootProvider`.
+
+## Architecture
+
+```ts title="app/api/search/route.ts"
+import { source } from "@/lib/source";
+import { createFromSource } from "fumadocs-core/search/server";
+
+export const { GET } = createFromSource(source, {
+  language: "english",
+});
+```
+
+The search dialog requests `/api/search`; results link directly to a page or heading anchor. Content updates are included automatically.
+
+## Customize the language
+
+```ts
+export const { GET } = createFromSource(source, {
+  language: "german",
+});
+```
+
+Use a supported tokenizer language that matches most of the corpus. For multilingual documentation, consider separate indexes or an external search service.
+
+## Improve results
+
+- Give each page a unique, descriptive title.
+- Write a useful frontmatter description.
+- Use task-oriented headings.
+- Put important terminology in prose, not only screenshots.
+- Exclude drafts from the content tree instead of publishing thin pages.
+
+## Verify
+
+```bash
+pnpm dev
+# Open http://localhost:3000/api/search
+```
+
+The endpoint should return JSON. Then test keyboard navigation, escape-to-close, and deep result links in the browser.
+
+> Tip: Search quality starts with information architecture. Clear titles and headings usually matter more than tuning the engine.
+

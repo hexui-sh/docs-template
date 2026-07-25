@@ -1,0 +1,57 @@
+---
+title: Upgrade the Template
+description: Update dependencies or incorporate upstream template changes without losing local customization.
+---
+
+There are two upgrade types: dependency updates within your project and source changes from the template repository. Handle them separately so failures are easy to diagnose.
+
+## Update dependencies
+
+```bash
+pnpm outdated
+pnpm update
+pnpm lint
+pnpm build
+```
+
+For major versions, update one framework family at a time:
+
+```bash
+pnpm up next@latest react@latest react-dom@latest
+pnpm up fumadocs-core@latest fumadocs-ui@latest fumadocs-mdx@latest
+```
+
+Read the relevant release notes and inspect changes to generated types, CSS imports, and component APIs.
+
+## Incorporate upstream source
+
+Add the template as a remote once:
+
+```bash
+git remote add template https://github.com/hex-ui/hex-ui.git
+git fetch template
+```
+
+Compare before merging:
+
+```bash
+git diff HEAD...template/main -- docs-template
+```
+
+Apply changes in small groups: build configuration, runtime components, styles, then content. Preserve local branding and information architecture intentionally.
+
+## Verify patches
+
+The `patches/next-themes@0.4.6.patch` file is part of dependency installation. Confirm it still applies after upgrading `next-themes`; remove or regenerate it only after understanding why it exists.
+
+## Regression checklist
+
+- MDX compilation and sidebar order
+- Search endpoint and dialog
+- Theme persistence without hydration warnings
+- Mobile drawer and collection tabs
+- Page actions and source URLs
+- Metadata and redirects
+
+> Warning: Do not blindly replace `package.json`, `app/globals.css`, or configuration files. They contain local product decisions as well as upstream mechanics.
+

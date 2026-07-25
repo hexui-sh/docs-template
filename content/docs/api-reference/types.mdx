@@ -1,0 +1,84 @@
+---
+title: Types
+description: Public configuration, collection, social icon, and component prop types.
+---
+
+## Site configuration
+
+```ts
+import type { NavLink, SocialLink, SiteConfig } from "@/lib/site-config";
+```
+
+### `NavLink`
+
+| Field | Type | Required | Purpose |
+| --- | --- | --- | --- |
+| `title` | `string` | Yes | Visible link label |
+| `href` | `string` | Yes | Internal path or external URL |
+| `external` | `boolean` | No | Opens with external-link treatment |
+
+```ts
+const support: NavLink = {
+  title: "Support",
+  href: "https://support.example.com",
+  external: true,
+};
+```
+
+### `SocialLink`
+
+| Field | Type | Required | Purpose |
+| --- | --- | --- | --- |
+| `title` | `string` | Yes | Accessible service name |
+| `href` | `string` | Yes | Profile or community URL |
+| `icon` | `"github" \| "x" \| "discord"` | Yes | Registry key from `components/icons.tsx` |
+
+`SiteConfig` is `typeof siteConfig`; it preserves literal values because the object uses `as const`.
+
+## Documentation collections
+
+```ts
+import type {
+  DocsCollection,
+  DocsCollectionId,
+} from "@/lib/docs-collections";
+```
+
+| Field | Type | Purpose |
+| --- | --- | --- |
+| `id` | `string` | Stable programmatic key |
+| `title` | `string` | Visible collection title |
+| `path` | `` `/${string}` `` | Collection URL prefix |
+| `defaultPath` | `` `/${string}` `` | Existing landing page |
+| `description` | `string` | Tooltip/context |
+| `icon` | `ComponentType<SVGProps<SVGSVGElement>>` | Tab icon |
+
+`DocsCollectionId` is inferred from `docsCollections`, currently `"documentation" | "api-reference"`.
+
+## Icon types
+
+```ts
+import type { SocialIconName } from "@/components/icons";
+
+const icon: SocialIconName = "github";
+```
+
+It is the key union of `socialIcons`, which prevents configuration from referencing an unregistered icon.
+
+## Component props
+
+```ts
+import type { FooterProps } from "@/components/docs-footer";
+
+const footerProps: FooterProps = {
+  className: "mt-12",
+  items: {
+    next: { name: "Install", url: "/documentation/installation" },
+  },
+};
+```
+
+`Button` props are inferred from `ButtonPrimitive.Props` and `VariantProps<typeof buttonVariants>` rather than exported under a separate name.
+
+> Tip: Export a named props type when external modules need it for wrappers, fixtures, or tests. Otherwise inferred component props keep the public surface smaller.
+

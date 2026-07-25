@@ -1,0 +1,84 @@
+---
+title: Overview
+description: Understand what the documentation template provides, how it is built, and where its main files live.
+icon: BookOpen
+---
+
+This template is a production-ready foundation for a technical documentation website. It combines Next.js App Router with Fumadocs and MDX, giving a team file-based content, searchable pages, responsive navigation, and light and dark themes without maintaining a custom documentation engine.
+
+It is intended for product teams, open-source maintainers, SDK authors, and internal platform teams. Readers should know basic React and Next.js; no knowledge of Fumadocs is required.
+
+## Main features
+
+- File-based MDX pages with typed frontmatter.
+- Two top-level collections: **Documentation** and **API Reference**.
+- Generated sidebars, breadcrumbs, table of contents, and previous/next links.
+- Full-text search through `/api/search`.
+- Responsive notebook layout with mobile navigation.
+- Light, dark, and system themes based on semantic CSS tokens.
+- Per-page Markdown copy, source links, and AI-reader actions.
+- Central branding and navigation configuration.
+- Static page generation and page-specific SEO metadata.
+
+> Tip: Start with [Installation](/documentation/installation), then update [Configuration](/documentation/configuration) before writing new content.
+
+## Tech stack
+
+| Technology | Responsibility |
+| --- | --- |
+| Next.js 16 | App Router, rendering, routing, metadata, and production builds |
+| React 19 | Component model and client interactions |
+| TypeScript 5 | Static types for configuration and reusable APIs |
+| Fumadocs | Content source, documentation layout, search, and MDX UI |
+| Tailwind CSS 4 | Utility styling and design tokens |
+| next-themes | Light, dark, and system preference handling |
+| Lucide React | Interface and navigation icons |
+| Base UI + CVA | Accessible primitives and component variants |
+
+## Request flow
+
+```text
+content/docs/**/*.mdx
+        │
+        ▼
+source.config.ts → generated .source modules
+        │
+        ▼
+lib/source.ts → app/[[...slug]]/page.tsx
+        │
+        ├─ page content and metadata
+        ├─ sidebar and table of contents
+        └─ search index at /api/search
+```
+
+## Folder structure
+
+```text
+docs-template/
+├── app/                 # Routes, root layout, metadata, and global CSS
+├── components/          # Header, footer, page actions, icons, and UI
+├── content/docs/        # MDX pages and sidebar metadata
+├── lib/                 # Content source, configuration, routing utilities
+├── public/              # Static images, logos, and downloadable files
+├── mdx-components.tsx   # Components available to every MDX page
+├── source.config.ts     # Fumadocs content collection
+└── next.config.ts       # Next.js with the MDX integration
+```
+
+The template does not create empty `hooks/`, `styles/`, `types/`, or `config/` directories. Add them when the application needs shared hooks, CSS beyond `app/globals.css`, domain types, or configuration modules. This keeps a fresh project small while preserving familiar conventions.
+
+## A minimal page
+
+```mdx title="content/docs/documentation/guides/first-page.mdx"
+---
+title: First Page
+description: A useful summary for search results and metadata.
+---
+
+## Get started
+
+Explain the task, then show a working example.
+```
+
+Add `"first-page"` to the folder's `meta.json` to place it in the sidebar. See [Add a page](/documentation/guides/add-a-page) for the full workflow.
+

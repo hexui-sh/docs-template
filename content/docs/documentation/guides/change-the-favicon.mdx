@@ -1,0 +1,45 @@
+---
+title: Change the Favicon
+description: Replace the browser icon and add optional platform-specific application icons.
+---
+
+## 1. Prepare the icon
+
+Use a simple square mark that remains recognizable at 16×16 pixels. Avoid small text. Export a multi-size `.ico`, or use PNG/SVG metadata files supported by the Next.js App Router.
+
+## 2. Replace the default
+
+Replace `app/favicon.ico` with your file while keeping the name. Next.js detects it automatically.
+
+```text
+app/
+├── favicon.ico
+└── layout.tsx
+```
+
+## 3. Add platform icons
+
+Optional file conventions include:
+
+```text
+app/icon.png            # General application icon
+app/apple-icon.png      # Apple touch icon
+```
+
+For explicit remote or multiple icons, configure metadata:
+
+```tsx title="app/layout.tsx"
+export const metadata: Metadata = {
+  icons: {
+    icon: "/brand/icon-32.png",
+    apple: "/brand/apple-touch-icon.png",
+  },
+};
+```
+
+## 4. Clear caches and verify
+
+Restart development, hard-refresh the browser, and inspect the generated `<link rel="icon">`. Browsers cache favicons aggressively; test in a private window if necessary.
+
+> Note: Replacing a favicon changes a binary file, so review it visually rather than relying only on a code diff.
+

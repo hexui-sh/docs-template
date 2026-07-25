@@ -1,0 +1,122 @@
+---
+title: Configuration
+description: Configure environment variables, branding, metadata, navigation, themes, and global behavior.
+icon: Settings
+---
+
+The template intentionally separates content configuration from runtime configuration. Branding and global links live in TypeScript; page order lives in `meta.json`; visual tokens live in CSS; secrets live in environment files.
+
+## Environment variables
+
+The base template requires none. For an external service, create `.env.local`:
+
+```bash title=".env.local"
+NEXT_PUBLIC_ANALYTICS_ID=site_123
+SEARCH_ADMIN_TOKEN=replace-with-a-secret
+```
+
+Read public variables in client or server code:
+
+```ts
+const analyticsId = process.env.NEXT_PUBLIC_ANALYTICS_ID;
+```
+
+Read secrets only in server modules or route handlers:
+
+```ts
+const token = process.env.SEARCH_ADMIN_TOKEN;
+if (!token) throw new Error("SEARCH_ADMIN_TOKEN is required");
+```
+
+> Warning: Every `NEXT_PUBLIC_` value is embedded in browser JavaScript. Never use that prefix for tokens, passwords, or private endpoints.
+
+Commit a safe contract as `.env.example`, but keep `.env.local` ignored:
+
+```bash title=".env.example"
+NEXT_PUBLIC_ANALYTICS_ID=
+SEARCH_ADMIN_TOKEN=
+```
+
+## Site configuration
+
+Edit `lib/site-config.ts` for the name, description, production URL, repository, header links, and social links:
+
+```ts title="lib/site-config.ts"
+export const siteConfig = {
+  name: "Acme Platform",
+  description: "Technical documentation for Acme Platform.",
+  tagline: "Build reliable integrations with Acme.",
+  url: "https://docs.acme.com",
+  docsBase: "/",
+  links: {
+    github: "https://github.com/acme/platform",
+  },
+  // nav and socials...
+} as const;
+```
+
+Why centralize these values? Components remain reusable and a rebrand does not require searching JSX for hardcoded strings.
+
+## Metadata
+
+`app/layout.tsx` defines defaults and a title template. The catch-all page overrides the title and description using MDX frontmatter:
+
+```mdx
+---
+title: Authentication
+description: Authenticate API requests with an access token.
+---
+```
+
+Set `siteConfig.url` to the canonical production origin so `metadataBase` resolves absolute social URLs correctly. See [Configure SEO](/documentation/guides/configure-seo).
+
+## Navigation
+
+Three files have distinct roles:
+
+| File | Controls |
+| --- | --- |
+| `lib/docs-collections.ts` | Top collection tabs, default pages, and legacy redirects |
+| `lib/site-config.ts` | Global navigation and external links |
+| `content/docs/**/meta.json` | Sidebar groups and page order |
+
+```json title="content/docs/documentation/guides/meta.json"
+{
+  "title": "Guides",
+  "icon": "BookOpen",
+  "pages": ["add-a-page", "add-a-component", "..."]
+}
+```
+
+## Theme configuration
+
+`app/globals.css` imports Tailwind and Fumadocs styles, maps semantic tokens, and defines light/dark palettes. `app/layout.tsx` loads Geist and enables the theme provider. Customize those files together when changing fonts or colors.
+
+```css title="app/globals.css"
+:root {
+  --primary: oklch(0.55 0.2 260);
+  --radius: 0.75rem;
+}
+
+.dark {
+  --primary: oklch(0.75 0.14 260);
+}
+```
+
+## Global settings
+
+- Change content discovery in `source.config.ts`.
+- Change Next.js behavior in `next.config.ts`.
+- Change layout options in `lib/layout.shared.tsx` and `app/layout.tsx`.
+- Change raw Markdown and repository paths in `lib/shared.ts`.
+- Change global MDX components in `mdx-components.tsx`.
+
+After configuration changes, run:
+
+```bash
+pnpm lint
+pnpm build
+```
+
+> Note: Restart the development server after editing environment files, `source.config.ts`, or `next.config.ts`.
+

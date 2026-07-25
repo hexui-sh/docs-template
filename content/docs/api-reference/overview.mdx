@@ -1,0 +1,34 @@
+---
+title: Overview
+description: Reusable components, hooks, utilities, and public TypeScript types exposed by the template.
+icon: BookOpen
+---
+
+This section documents application-owned APIs that can be reused while extending the template. Import paths use the `@/*` alias configured in `tsconfig.json`.
+
+## Reference areas
+
+<Cards>
+  <Card title="Components" href="/api-reference/components">
+    Layout, navigation, page-action, icon, and button components.
+  </Card>
+  <Card title="Hooks" href="/api-reference/hooks">
+    Hook usage and conventions, including hooks consumed from Fumadocs.
+  </Card>
+  <Card title="Utilities" href="/api-reference/utilities">
+    Class merging, URL matching, collection lookup, redirects, and source helpers.
+  </Card>
+  <Card title="Types" href="/api-reference/types">
+    Configuration, collection, icon, and component prop types.
+  </Card>
+</Cards>
+
+## Import examples
+
+```tsx
+import { Button } from "@/components/ui/button";
+import { getDocsCollection } from "@/lib/docs-collections";
+import type { NavLink } from "@/lib/site-config";
+```
+
+> Note: The template is an application, not a published package. These APIs are internal contracts for this codebase. If you publish them as a library, add a package entry point and semantic-versioning policy.

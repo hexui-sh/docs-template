@@ -1,0 +1,61 @@
+---
+title: Hooks
+description: Hooks used by the template and conventions for adding application-owned hooks.
+---
+
+The repository currently exports no application-owned custom hooks. Client components use framework hooks directly. This is intentional: a hook should be introduced when stateful logic is reused, not merely to wrap one call.
+
+## Hooks currently consumed
+
+| Hook | Import path | Purpose | Return value |
+| --- | --- | --- | --- |
+| `usePathname` | `next/navigation` | Current URL in navigation components | `string` |
+| `useNotebookLayout` | `fumadocs-ui/layouts/notebook` | Access layout slots such as the sidebar trigger | Notebook layout context |
+| `useFooterItems` | `fumadocs-ui/utils/use-footer-items` | Get ordered page-tree items | Array of page items |
+| `useTranslations` | `@fuma-translate/react` | Translate pagination labels | Translation function/object |
+
+```tsx
+"use client";
+
+import { usePathname } from "next/navigation";
+
+export function CurrentRoute() {
+  const pathname = usePathname();
+  return <code>{pathname}</code>;
+}
+```
+
+## Add a custom hook
+
+Create `hooks/use-media-query.ts`:
+
+```tsx
+"use client";
+
+import { useEffect, useState } from "react";
+
+export function useMediaQuery(query: string): boolean {
+  const [matches, setMatches] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    const update = () => setMatches(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, [query]);
+
+  return matches;
+}
+```
+
+```tsx
+import { useMediaQuery } from "@/hooks/use-media-query";
+
+const isWide = useMediaQuery("(min-width: 64rem)");
+```
+
+Parameter: `query: string`, a valid media query. Return value: `boolean`; it is `false` during server rendering and until the first effect.
+
+> Tip: Prefer CSS media variants for presentation. Use a JavaScript media hook only when behavior or data loading must change.
+

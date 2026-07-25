@@ -1,0 +1,103 @@
+---
+title: Components
+description: Props, imports, and examples for reusable components owned by the template.
+---
+
+## `Button`
+
+Purpose: accessible Base UI button with typed visual variants.
+
+```tsx
+import { Button } from "@/components/ui/button";
+
+<Button variant="outline" size="sm" disabled={isSaving}>
+  Save
+</Button>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `"default" \| "outline" \| "secondary" \| "ghost" \| "destructive" \| "link"` | `"default"` | Visual intent |
+| `size` | `"default" \| "xs" \| "sm" \| "lg" \| "icon" \| "icon-xs" \| "icon-sm" \| "icon-lg"` | `"default"` | Height, spacing, and icon sizing |
+| `className` | `string` | — | Additional merged classes |
+| Base UI props | `ButtonPrimitive.Props` | — | Native button behavior and events |
+
+`buttonVariants(options)` returns the generated class string for button-styled non-button controls.
+
+## `DocsCategoryNav`
+
+Purpose: render collection tabs and mark/scroll the active item.
+
+```tsx
+import { DocsCategoryNav } from "@/components/docs-category-nav";
+
+<DocsCategoryNav className="border-b" />
+```
+
+Props: `{ className?: string }`. Returns a `<nav>` element.
+
+## `DocsPageActions`
+
+Purpose: combine Markdown copying with source/provider links.
+
+```tsx
+import { DocsPageActions } from "@/components/docs-page-actions";
+
+<DocsPageActions
+  markdownUrl="/raw/guide.md"
+  githubUrl="https://github.com/acme/docs/blob/main/content/guide.mdx"
+/>
+```
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `markdownUrl` | `string` | Yes | Fetchable Markdown URL |
+| `githubUrl` | `string` | No | Source file URL |
+
+## `DocsViewOptionsPopover`
+
+Purpose: provider/source popover used by `DocsPageActions`.
+
+```tsx
+import { DocsViewOptionsPopover } from "@/components/docs-view-options-popover";
+
+<DocsViewOptionsPopover markdownUrl="/raw/page.md">
+  Open
+</DocsViewOptionsPopover>
+```
+
+It accepts `PopoverTrigger` props plus `markdownUrl?: string` and `githubUrl?: string`.
+
+## `Footer`
+
+Purpose: render previous/next page links derived from the page tree or explicit items.
+
+```tsx
+import { Footer } from "@/components/docs-footer";
+
+<Footer items={{ next: { name: "Configuration", url: "/documentation/configuration" } }} />
+```
+
+`FooterProps` extends `ComponentProps<"div">`; `items.previous` and `items.next` contain `name`, optional `description`, and `url`.
+
+## Header and navigation
+
+```tsx
+import { DocsSiteHeader } from "@/components/docs-site-header";
+import { MobileNavMenu } from "@/components/mobile-nav";
+```
+
+Both take no required props. `DocsSiteHeader` must render inside `DocsLayout` because it reads notebook layout slots. `MobileNavMenu` is for pages outside that layout and reads links from `siteConfig`.
+
+## Brand icons
+
+```tsx
+import { GitHubIcon, XIcon, DiscordIcon } from "@/components/icons";
+
+<GitHubIcon className="size-5" />
+```
+
+Each accepts `ComponentProps<"svg">`. `socialIcons` maps the keys `github`, `x`, and `discord` to their components.
+
+> Warning: `DocsPageActions` needs a working `markdownUrl`. The default route constant alone does not create that endpoint.
+

@@ -1,0 +1,42 @@
+---
+title: Change the Logo
+description: Replace the text brand with a responsive, accessible image or SVG logo.
+---
+
+## 1. Add the asset
+
+Place a static file in `public`, for example `public/brand/logo.svg`. It will be served from `/brand/logo.svg`.
+
+## 2. Update the header
+
+Replace the text in `components/docs-site-header.tsx`:
+
+```tsx title="components/docs-site-header.tsx"
+import Image from "next/image";
+
+<Link href="/" aria-label={`${siteConfig.name} home`}>
+  <Image
+    src="/brand/logo.svg"
+    alt=""
+    width={132}
+    height={28}
+    priority
+  />
+</Link>
+```
+
+The link supplies the accessible name, so the image uses an empty `alt` to avoid repetition. If the image is not inside a named link, give it a descriptive alt.
+
+## 3. Support dark mode if needed
+
+```tsx
+<Image src="/brand/logo-light.svg" alt="" width={132} height={28} className="dark:hidden" />
+<Image src="/brand/logo-dark.svg" alt="" width={132} height={28} className="hidden dark:block" />
+```
+
+## 4. Verify
+
+Check both modes, the mobile header, 200% zoom, and slow loading. Keep explicit dimensions to prevent layout shift.
+
+> Tip: An SVG is usually the best fit for a wordmark because it stays sharp and has a small payload.
+

@@ -1,0 +1,55 @@
+---
+title: Light and Dark Modes
+description: Learn how theme state, semantic tokens, and component styles work together.
+---
+
+## Overview
+
+The template supports light, dark, and system modes. `next-themes`, through Fumadocs' `RootProvider`, applies the selected class to the document; CSS variables supply mode-specific values.
+
+## File locations
+
+- `app/layout.tsx`: provider, font variables, and hydration handling.
+- `lib/layout.shared.tsx`: layout theme-switch mode.
+- `components/docs-site-header.tsx`: visible switch.
+- `app/globals.css`: light and dark palettes.
+
+## Architecture
+
+```css title="app/globals.css"
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+}
+```
+
+Tailwind maps these variables to utilities in `@theme inline`, so `bg-background text-foreground` follows the active mode without conditional JSX.
+
+## Use theme-aware styling
+
+Prefer semantic tokens:
+
+```tsx
+<section className="border-border bg-card text-card-foreground">
+  Theme-aware content
+</section>
+```
+
+Use a `dark:` variant only when the component truly needs a mode-specific implementation:
+
+```tsx
+<img src="/diagram-light.svg" className="dark:hidden" alt="Request flow" />
+<img src="/diagram-dark.svg" className="hidden dark:block" alt="Request flow" />
+```
+
+## Customization
+
+See [Theme](/documentation/customization/theme) for behavior and [Colors](/documentation/customization/colors) for palette changes.
+
+> Warning: Do not read the theme during server rendering to choose page markup. Prefer CSS variants to avoid hydration differences and flashes.
+

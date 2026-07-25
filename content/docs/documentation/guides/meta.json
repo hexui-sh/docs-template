@@ -1,0 +1,16 @@
+{
+  "title": "Guides",
+  "icon": "Compass",
+  "pages": [
+    "add-a-page",
+    "add-a-component",
+    "create-a-section",
+    "change-the-logo",
+    "change-the-favicon",
+    "edit-navigation",
+    "configure-seo",
+    "add-environment-variables",
+    "deployment-workflow",
+    "upgrade-the-template"
+  ]
+}

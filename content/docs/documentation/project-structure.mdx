@@ -1,0 +1,93 @@
+---
+title: Project Structure
+description: Learn the responsibility of every major directory and important root configuration file.
+icon: FolderTree
+---
+
+The project separates runtime routes, reusable code, and authored content. Keep that boundary: MDX belongs in `content`, UI behavior belongs in `components`, and framework integration belongs in `app` or `lib`.
+
+## Directory map
+
+| Path | Responsibility |
+| --- | --- |
+| `app/` | Next.js routes, root provider, metadata, global CSS, 404 page, and API handlers |
+| `components/` | Reusable React components used by routes and MDX |
+| `content/docs/` | Documentation collections, `.mdx` pages, and `meta.json` navigation files |
+| `lib/` | Site configuration, content loader, collection routing, URLs, and class-name helpers |
+| `public/` | Static files served from `/`, such as logos, screenshots, and downloads |
+| `patches/` | pnpm dependency patches that must stay in version control |
+
+## `app/`
+
+```text
+app/
+├── [[...slug]]/page.tsx  # Resolves every documentation URL
+├── api/search/route.ts   # Full-text search endpoint
+├── favicon.ico           # Browser icon
+├── globals.css           # Tailwind imports and theme tokens
+├── layout.tsx            # Root HTML, providers, layout, and default metadata
+└── not-found.tsx         # Friendly 404 route
+```
+
+The optional catch-all route handles both collections. `generateStaticParams()` asks the content source for all known pages, while `generateMetadata()` reads each page's frontmatter.
+
+## `components/`
+
+Layout components implement the two-row header, collection tabs, footer pagination, page actions, and mobile navigation. `components/ui/` holds application-owned primitives such as `Button`.
+
+```tsx title="components/example.tsx"
+import { cn } from "@/lib/utils";
+
+export function Example({ className }: { className?: string }) {
+  return <div className={cn("rounded-lg border p-4", className)}>Example</div>;
+}
+```
+
+Use feature folders when a component requires tests, helpers, or several child components. Keep broadly reusable primitives in `components/ui`.
+
+## `content/docs/`
+
+The directory mirrors public URLs:
+
+```text
+content/docs/documentation/guides/add-a-page.mdx
+→ /documentation/guides/add-a-page
+```
+
+Each folder may contain `meta.json` to set its title, icon, order, and initial open state.
+
+## `lib/`
+
+- `site-config.ts` is the branding and global-link source of truth.
+- `docs-collections.ts` defines top-level collections and redirects.
+- `source.ts` exposes the generated Fumadocs source.
+- `layout.shared.tsx` maps site configuration into layout options.
+- `shared.ts` contains raw-content and repository URL settings.
+- `utils.ts`, `cn.ts`, and `urls.ts` are small reusable helpers.
+
+## Optional directories
+
+Create these only when needed:
+
+```text
+hooks/       # Reusable client hooks, named use-*.ts
+styles/      # Additional CSS modules or third-party overrides
+types/       # Cross-feature domain types
+config/      # Large configuration modules split from lib/site-config.ts
+```
+
+For example, a shared media-query hook belongs in `hooks/use-media-query.ts`, not beside an unrelated component.
+
+## Root files
+
+| File | Purpose |
+| --- | --- |
+| `source.config.ts` | Defines the `content/docs` collection |
+| `mdx-components.tsx` | Registers components available in all MDX |
+| `next.config.ts` | Wraps Next.js configuration with `createMDX()` |
+| `components.json` | shadcn component aliases and styling choices |
+| `tsconfig.json` | Strict TypeScript and `@/*` aliases |
+| `package.json` | Commands and dependencies |
+
+> Tip: Prefer the `@/` alias in application code. Relative imports are still appropriate for files within the same small feature folder.
+

@@ -1,0 +1,52 @@
+---
+title: MDX Content
+description: Author typed, searchable documentation with Markdown and reusable React components.
+---
+
+## Overview
+
+Pages are `.mdx` files under `content/docs`. MDX keeps common writing simple while allowing React components for tabs, cards, steps, accordions, and API tables.
+
+## File locations and architecture
+
+- `source.config.ts` defines the documentation collection.
+- `content/docs/**/*.mdx` contains pages.
+- `content/docs/**/meta.json` describes folders and order.
+- `mdx-components.tsx` registers global components.
+- `lib/source.ts` creates the runtime content source.
+- `app/[[...slug]]/page.tsx` renders the resolved body.
+
+```ts title="source.config.ts"
+export const docs = defineDocs({
+  dir: "content/docs",
+});
+```
+
+At build time, `fumadocs-mdx` generates typed modules in `.source`. The runtime loader builds page data, a page tree, table-of-contents entries, and processed text for search or LLM readers.
+
+## Usage
+
+````mdx title="content/docs/documentation/example.mdx"
+---
+title: Rate Limits
+description: Understand request quotas and retry behavior.
+icon: Gauge
+---
+
+## Retry a request
+
+```ts
+const delay = Number(response.headers.get("retry-after") ?? 1);
+await new Promise((resolve) => setTimeout(resolve, delay * 1000));
+```
+
+<Callout type="warn" title="Avoid synchronized retries">
+  Add jitter when many clients may retry at once.
+</Callout>
+````
+
+## Customization
+
+Register a local component in `mdx-components.tsx`, or import a page-specific component directly in MDX. Global registration is best for stable editorial primitives; explicit imports make specialized dependencies visible.
+
+> Note: Frontmatter `description` is used in page metadata and search. Write it as a complete, specific sentence.

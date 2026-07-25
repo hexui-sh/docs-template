@@ -1,0 +1,85 @@
+---
+title: FAQ
+description: Answers to common setup, customization, organization, and deployment questions.
+---
+
+## How do I update dependencies?
+
+Use pnpm's report first, then update in reviewable groups:
+
+```bash
+pnpm outdated
+pnpm update
+pnpm lint
+pnpm build
+```
+
+Read major-version release notes and keep `pnpm-lock.yaml` in the same commit. See [Upgrade the template](/documentation/guides/upgrade-the-template).
+
+## How do I deploy?
+
+Run `pnpm build`, then deploy the repository to a Next.js-compatible Node platform with `pnpm start`. Configure environment variables and Node explicitly. See [Deployment workflow](/documentation/guides/deployment-workflow).
+
+## How do I replace branding?
+
+Update names, descriptions, URLs, navigation, and social links in `lib/site-config.ts`; repository source links in `lib/shared.ts`; the visual logo in `components/docs-site-header.tsx`; and `app/favicon.ico`.
+
+```ts
+export const siteConfig = {
+  name: "Acme Docs",
+  url: "https://docs.acme.com",
+  // ...
+};
+```
+
+## Where should I put images?
+
+Put static images in `public`, organized by purpose:
+
+```text
+public/
+├── brand/logo.svg
+├── guides/deploy-preview.png
+└── diagrams/request-flow.svg
+```
+
+Reference them from the root:
+
+```mdx
+![Deployment preview](/guides/deploy-preview.png)
+```
+
+Use meaningful alt text unless an image is purely decorative.
+
+## How do I organize components?
+
+Keep primitives in `components/ui`, shared layout UI in `components`, and feature-specific UI in a named feature folder. Add `hooks/` or `types/` only when code is shared across features.
+
+## How do I enable dark mode?
+
+It is enabled by default through `RootProvider`, `ThemeSwitch`, and `.dark` tokens in `app/globals.css`. Customize the palette in [Colors](/documentation/customization/colors).
+
+## How do I add new routes?
+
+For documentation, add an MDX file under `content/docs`. For a custom application route, add an App Router page such as `app/status/page.tsx`:
+
+```tsx
+export default function StatusPage() {
+  return <main>All systems operational.</main>;
+}
+```
+
+Because `[[...slug]]` is optional and broad, verify that explicit application routes take precedence and do not reuse a documentation URL.
+
+## Why is a page missing from the sidebar?
+
+The nearest `meta.json` probably has a `pages` array that does not list it. Add the page name or `"..."`. Also confirm the extension is `.mdx`.
+
+## Why does “Copy Markdown” return 404?
+
+The button uses `docsContentRoute` from `lib/shared.ts`, but this repository does not implement that raw-content endpoint. Add the Fumadocs LLM/raw-content route used by your deployment or remove `DocsPageActions` until it exists.
+
+## Can I use npm, Yarn, or Bun?
+
+Yes. Use the matching commands from [Installation](/documentation/installation), delete lockfiles from other managers, and update CI to use the same manager.
+

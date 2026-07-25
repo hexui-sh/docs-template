@@ -1,0 +1,74 @@
+---
+title: Icons
+description: Use Lucide icons for the interface and add custom brand icons safely.
+---
+
+The template uses Lucide for interface icons and `components/icons.tsx` for brand marks that Lucide intentionally does not provide.
+
+## Use a Lucide icon
+
+```tsx
+import { KeyRound } from "lucide-react";
+
+export function AuthenticationLabel() {
+  return (
+    <span className="inline-flex items-center gap-2">
+      <KeyRound className="size-4" aria-hidden="true" />
+      Authentication
+    </span>
+  );
+}
+```
+
+Decorative icons should use `aria-hidden`. An icon-only button needs an accessible label:
+
+```tsx
+<button aria-label="Open settings">
+  <Settings aria-hidden="true" />
+</button>
+```
+
+## Add a brand icon
+
+Create a component in `components/icons.tsx`, forward SVG props, and use `currentColor`:
+
+```tsx title="components/icons.tsx"
+export function AcmeIcon(props: ComponentProps<"svg">) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M12 2 22 22H2Z" />
+    </svg>
+  );
+}
+```
+
+Extend the registry and the `SocialLink["icon"]` union:
+
+```tsx
+export const socialIcons = {
+  ...,
+  acme: AcmeIcon,
+} as const;
+```
+
+## Navigation icons
+
+`meta.json` accepts Lucide names because `lib/source.ts` enables `lucideIconsPlugin()`:
+
+```json
+{
+  "title": "Security",
+  "icon": "ShieldCheck",
+  "pages": ["authentication", "authorization"]
+}
+```
+
+## Best practices
+
+- Use one icon family for consistent stroke and proportions.
+- Keep interface icons at `size-4` or `size-5` unless they are illustrative.
+- Do not encode meaning with color alone.
+- Optimize custom SVG paths and preserve a correct `viewBox`.
+
+> Note: A logo that contains text should have an accessible name in its surrounding link, even if the SVG itself is hidden from assistive technology.
+

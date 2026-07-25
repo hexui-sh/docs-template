@@ -1,0 +1,52 @@
+---
+title: Create a New Section
+description: Group related pages into an ordered, collapsible sidebar section.
+---
+
+## 1. Create the folder
+
+```text
+content/docs/documentation/security/
+├── overview.mdx
+├── access-tokens.mdx
+└── meta.json
+```
+
+## 2. Add section metadata
+
+```json title="content/docs/documentation/security/meta.json"
+{
+  "title": "Security",
+  "icon": "ShieldCheck",
+  "defaultOpen": false,
+  "pages": ["overview", "access-tokens"]
+}
+```
+
+## 3. Write the landing page
+
+```mdx title="content/docs/documentation/security/overview.mdx"
+---
+title: Security Overview
+description: Learn the security model and recommended controls.
+---
+
+## Security model
+
+Requests use short-lived tokens and least-privilege scopes.
+```
+
+## 4. Register the folder in its parent
+
+```json title="content/docs/documentation/meta.json"
+{
+  "pages": ["overview", "security", "guides", "..."]
+}
+```
+
+## 5. Verify navigation
+
+Open `/documentation/security/overview`. Confirm the icon resolves, the group expands, and footer pagination follows the intended order.
+
+> Tip: A section should represent a coherent reader goal. If it contains only one page, keep that page at the parent level until the topic grows.
+

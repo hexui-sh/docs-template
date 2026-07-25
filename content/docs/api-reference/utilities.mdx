@@ -1,0 +1,72 @@
+---
+title: Utilities
+description: Purpose, parameters, return values, and examples for shared utility functions.
+---
+
+## `cn`
+
+Import: `@/lib/utils` (clsx plus Tailwind conflict resolution) or `@/lib/cn` (the `cnfast` implementation).
+
+```tsx
+import { cn } from "@/lib/utils";
+
+<div className={cn("p-4 text-sm", active && "bg-accent", className)} />
+```
+
+Parameters: `...inputs: ClassValue[]`. Returns: `string`.
+
+> Note: Two `cn` implementations currently exist. Prefer `@/lib/utils` in new code and consolidate them during a maintenance change if consistent output is verified.
+
+## URL helpers
+
+```ts
+import { normalize, isActive } from "@/lib/urls";
+
+normalize("/guides/"); // "/guides"
+isActive("/guides", "/guides/setup", true); // true
+```
+
+| Function | Parameters | Returns |
+| --- | --- | --- |
+| `normalize` | `urlOrPath: string` | Path without a trailing slash, except `/` |
+| `isActive` | `href: string`, `pathname: string`, `nested = false` | Exact or nested match boolean |
+
+## Collection helpers
+
+```ts
+import {
+  getDocsCollection,
+  getDocsPath,
+  getDocsRedirect,
+} from "@/lib/docs-collections";
+
+getDocsCollection("/api-reference/types")?.id; // "api-reference"
+getDocsPath(["documentation", "overview"]); // "/documentation/overview"
+getDocsRedirect([]); // "/documentation/overview"
+```
+
+`getDocsCollection(pathname)` returns a collection record or `undefined`. `getDocsPath(slug?)` returns an absolute path. `getDocsRedirect(slug?)` returns a redirect target or `undefined`.
+
+## Source helpers
+
+```ts
+import { getPageImage, getPageMarkdownUrl, getLLMText } from "@/lib/source";
+
+const markdown = getPageMarkdownUrl(page);
+// { segments: [...page.slugs, "content.md"], url: "..." }
+
+const text = await getLLMText(page);
+```
+
+`getPageImage(page)` and `getPageMarkdownUrl(page)` return `{ segments: string[]; url: string }`. `getLLMText(page)` returns `Promise<string>` containing a title, page URL, and processed body.
+
+## `baseOptions`
+
+```ts
+import { baseOptions } from "@/lib/layout.shared";
+
+const options = baseOptions();
+```
+
+Takes no parameters and returns `BaseLayoutProps` containing repository links, collection links, and theme-switch configuration.
+

@@ -1,0 +1,73 @@
+---
+title: Navigation
+description: Customize collection tabs, global links, sidebar groups, ordering, and redirects.
+---
+
+Navigation has three layers: collection tabs, global links, and the generated sidebar. Keeping them separate lets the sidebar scale without duplicating every page in TypeScript.
+
+## Collection tabs
+
+Edit `lib/docs-collections.ts`:
+
+```ts title="lib/docs-collections.ts"
+export const docsCollections = [
+  {
+    id: "documentation",
+    title: "Documentation",
+    path: "/documentation",
+    defaultPath: "/documentation/overview",
+    description: "Product guides and configuration.",
+    icon: BookOpen,
+  },
+] as const satisfies readonly DocsCollection[];
+```
+
+`path` identifies active URLs. `defaultPath` must point to an existing page and is used when users open the collection root.
+
+## Global links
+
+Edit `siteConfig.nav`:
+
+```ts title="lib/site-config.ts"
+nav: [
+  { title: "Docs", href: "/documentation/overview" },
+  { title: "Status", href: "https://status.acme.com", external: true },
+] as NavLink[],
+```
+
+External links receive a new-tab treatment in `MobileNavMenu`.
+
+## Sidebar order
+
+```json title="content/docs/documentation/meta.json"
+{
+  "title": "Documentation",
+  "root": true,
+  "pages": ["overview", "installation", "customization", "guides", "..."]
+}
+```
+
+Entries are file or folder names without extensions. `"..."` appends unlisted entries. When a `pages` array exists, omitted items are hidden unless included by the rest marker.
+
+## Redirect moved pages
+
+Preserve bookmarks when reorganizing content:
+
+```ts title="lib/docs-collections.ts"
+const legacyPages = new Map<string, string>([
+  ["/documentation/getting-started", "/documentation/installation"],
+]);
+```
+
+For a whole subtree, add a pair to `legacyPrefixes`.
+
+## Best practices
+
+- Keep each collection's default page stable.
+- Avoid more than two nested sidebar folder levels.
+- Add redirects in the same change that moves a page.
+- Check every `meta.json` entry during review.
+- Use descriptive titles; navigation is also an information architecture.
+
+See [Edit navigation](/documentation/guides/edit-navigation) for a step-by-step change.
+

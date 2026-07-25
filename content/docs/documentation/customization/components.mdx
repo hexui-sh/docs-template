@@ -1,0 +1,80 @@
+---
+title: Components
+description: Customize existing React and MDX components or register new reusable content primitives.
+---
+
+Application components live in `components/`; components made globally available to MDX are registered in `mdx-components.tsx`.
+
+## Modify an application component
+
+For example, add a `subtle` button variant in `components/ui/button.tsx`:
+
+```tsx title="components/ui/button.tsx"
+const buttonVariants = cva("...", {
+  variants: {
+    variant: {
+      default: "bg-primary text-primary-foreground",
+      subtle: "bg-muted text-muted-foreground hover:text-foreground",
+    },
+  },
+});
+```
+
+Use it with typed props:
+
+```tsx
+<Button variant="subtle">View details</Button>
+```
+
+## Register an MDX component
+
+```tsx title="components/api-status.tsx"
+export function ApiStatus({ stable }: { stable: boolean }) {
+  return (
+    <span className={stable ? "text-emerald-600" : "text-amber-600"}>
+      {stable ? "Stable" : "Experimental"}
+    </span>
+  );
+}
+```
+
+```tsx title="mdx-components.tsx"
+import { ApiStatus } from "@/components/api-status";
+
+export function getMDXComponents(components?: MDXComponents): MDXComponents {
+  return {
+    ...defaultMdxComponents,
+    ApiStatus,
+    ...components,
+  };
+}
+```
+
+It is now available without imports:
+
+```mdx
+<ApiStatus stable />
+```
+
+## Override a Markdown element
+
+The same map can customize native MDX output:
+
+```tsx
+return {
+  ...defaultMdxComponents,
+  a: (props) => <a {...props} className="font-medium underline-offset-4" />,
+  ...components,
+};
+```
+
+## Best practices
+
+- Keep MDX props serializable and author-friendly.
+- Use semantic HTML before adding ARIA.
+- Accept `className` when consumers need composition.
+- Use `cn()` to merge conditional Tailwind classes.
+- Document reusable public props in [Components API](/api-reference/components).
+
+> Warning: Globally registered names are part of your content API. Renaming one can break many MDX files, so treat changes as migrations.
+

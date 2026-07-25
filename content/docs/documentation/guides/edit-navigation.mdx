@@ -1,0 +1,60 @@
+---
+title: Edit Navigation
+description: Add, reorder, remove, or redirect navigation items without breaking page discovery.
+---
+
+## 1. Identify the navigation layer
+
+- Collection tabs: `lib/docs-collections.ts`
+- Header/global links: `lib/site-config.ts`
+- Sidebar pages and sections: the nearest `meta.json`
+
+## 2. Reorder sidebar pages
+
+```json title="content/docs/documentation/meta.json"
+{
+  "pages": [
+    "overview",
+    "installation",
+    "configuration",
+    "customization",
+    "features",
+    "guides",
+    "faq",
+    "changelog"
+  ]
+}
+```
+
+## 3. Add an external global link
+
+```ts title="lib/site-config.ts"
+{
+  title: "System status",
+  href: "https://status.example.com",
+  external: true,
+}
+```
+
+## 4. Move a page safely
+
+Move the file, update all `meta.json` entries and internal links, then add a redirect:
+
+```ts title="lib/docs-collections.ts"
+const legacyPages = new Map<string, string>([
+  ["/documentation/setup", "/documentation/installation"],
+]);
+```
+
+## 5. Validate
+
+Search the repository for the old route:
+
+```bash
+rg "/documentation/setup" content app components lib
+```
+
+Then run the build and test desktop tabs, sidebar, mobile drawer, breadcrumbs, and footer pagination.
+
+> Warning: Removing an item from `meta.json` hides it from navigation but may not delete the route. Delete or redirect the content when it should no longer be public.
+

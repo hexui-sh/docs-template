@@ -1,0 +1,68 @@
+---
+title: SEO and Metadata
+description: Understand default metadata, page metadata, canonical origins, and social previews.
+---
+
+## Overview
+
+The root layout defines site-wide defaults, and every documentation page derives its title and description from frontmatter. Next.js combines both layers into the final document metadata.
+
+## File locations
+
+- `lib/site-config.ts`: site name, description, and canonical URL.
+- `app/layout.tsx`: `metadataBase`, title template, and defaults.
+- `app/[[...slug]]/page.tsx`: page title, description, and Open Graph article fields.
+- `content/docs/**/*.mdx`: page-specific frontmatter.
+
+## Architecture
+
+```tsx title="app/layout.tsx"
+export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.url),
+  title: {
+    default: `${siteConfig.name} – ${siteConfig.tagline}`,
+    template: `%s | ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
+};
+```
+
+```tsx title="app/[[...slug]]/page.tsx"
+return {
+  title: page.data.title,
+  description: page.data.description,
+  openGraph: {
+    title: page.data.title,
+    description: page.data.description,
+    type: "article",
+  },
+};
+```
+
+## Customize a page
+
+```mdx
+---
+title: Webhook Signatures
+description: Verify webhook payloads before processing them.
+---
+```
+
+Use one clear topic per title and keep descriptions informative rather than promotional.
+
+## Extend metadata
+
+Add a canonical URL or social image in `generateMetadata()`:
+
+```tsx
+alternates: { canonical: page.url },
+openGraph: {
+  title: page.data.title,
+  images: [getPageImage(page).url],
+},
+```
+
+Before enabling images, implement the matching image route or provide static assets.
+
+> Note: `lib/source.ts` currently prepares an image URL but the repository does not include an Open Graph image route. Do not publish those URLs until that route exists.
+

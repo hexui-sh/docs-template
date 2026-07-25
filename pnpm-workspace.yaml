@@ -1,0 +1,12 @@
+allowBuilds:
+  esbuild: true
+  sharp: true
+  unrs-resolver: true
+ignoredBuiltDependencies:
+  - sharp
+  - unrs-resolver
+minimumReleaseAgeExclude:
+  - fumadocs-core@16.12.1
+  - fumadocs-ui@16.12.1
+patchedDependencies:
+  next-themes@0.4.6: patches/next-themes@0.4.6.patch

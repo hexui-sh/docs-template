@@ -1,0 +1,59 @@
+---
+title: Deployment Workflow
+description: Build, test, release, deploy, and verify the documentation application safely.
+---
+
+The template can run on any platform that supports Next.js Node deployments. Static export requires changes to dynamic endpoints such as search.
+
+## 1. Create a release branch
+
+```bash
+git checkout -b docs/release-update
+pnpm install --frozen-lockfile
+```
+
+## 2. Run local checks
+
+```bash
+pnpm lint
+pnpm build
+pnpm start
+```
+
+Test a deep link, a 404, search, light/dark mode, mobile navigation, and the Markdown/source actions you intend to expose.
+
+## 3. Configure the platform
+
+Use:
+
+```text
+Install: pnpm install --frozen-lockfile
+Build:   pnpm build
+Start:   pnpm start
+```
+
+Set the Node version and environment variables explicitly. Do not rely on a developer machine's implicit defaults.
+
+## 4. Deploy a preview
+
+Review route behavior, canonical metadata, robots policy, assets, and responsive layouts on the actual preview origin. Share it with content and engineering reviewers.
+
+## 5. Deploy production
+
+Merge the reviewed change and let CI deploy the immutable commit. Record user-visible changes in the changelog.
+
+## 6. Perform smoke tests
+
+```bash
+curl --fail https://docs.example.com/documentation/overview
+curl --fail https://docs.example.com/api/search
+```
+
+Also check browser-only interactions and logs.
+
+## Rollback
+
+Redeploy the last known-good commit. Database rollback is not required for the base template, but external search or analytics integrations may have their own release state.
+
+> Tip: A successful build proves compilation, not usability. Keep a short post-deployment checklist for routes and client interactions.
+

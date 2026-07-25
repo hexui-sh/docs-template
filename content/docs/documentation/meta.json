@@ -1,0 +1,16 @@
+{
+  "title": "Documentation",
+  "icon": "BookOpen",
+  "root": true,
+  "pages": [
+    "overview",
+    "installation",
+    "project-structure",
+    "configuration",
+    "customization",
+    "features",
+    "guides",
+    "faq",
+    "changelog"
+  ]
+}

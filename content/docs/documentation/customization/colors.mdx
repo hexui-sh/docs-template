@@ -1,0 +1,67 @@
+---
+title: Colors
+description: Replace the neutral palette with accessible semantic colors for light and dark modes.
+---
+
+All application colors are defined in `app/globals.css`. Tailwind's inline theme maps names such as `bg-primary` and `text-muted-foreground` to CSS variables.
+
+## Core tokens
+
+| Token pair | Typical use |
+| --- | --- |
+| `background` / `foreground` | Page canvas and default text |
+| `card` / `card-foreground` | Raised surfaces |
+| `primary` / `primary-foreground` | Primary actions and emphasis |
+| `secondary` / `secondary-foreground` | Secondary controls |
+| `muted` / `muted-foreground` | Quiet surfaces and supporting text |
+| `accent` / `accent-foreground` | Hover and selected states |
+| `destructive` | Dangerous actions and errors |
+| `border`, `input`, `ring` | Boundaries and focus indicators |
+
+## Apply a brand color
+
+Define values in both palettes:
+
+```css title="app/globals.css"
+:root {
+  --primary: oklch(0.52 0.22 264);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.62 0.18 264);
+}
+
+.dark {
+  --primary: oklch(0.72 0.16 264);
+  --primary-foreground: oklch(0.16 0.03 264);
+  --ring: oklch(0.64 0.15 264);
+}
+```
+
+Components automatically consume the result:
+
+```tsx
+<button className="bg-primary text-primary-foreground focus-visible:ring-ring">
+  Get started
+</button>
+```
+
+## Sidebar and chart tokens
+
+Sidebar tokens are separate so the navigation can have a distinct surface. Chart tokens provide a predictable sequence for diagrams:
+
+```css
+:root {
+  --sidebar: oklch(0.98 0.01 264);
+  --sidebar-primary: var(--primary);
+  --chart-1: oklch(0.65 0.2 30);
+}
+```
+
+## Best practices
+
+- Keep foreground tokens readable against their paired backgrounds.
+- Check normal, hover, active, disabled, and focus states.
+- Prefer OKLCH for perceptually consistent changes.
+- Avoid using `primary` for every decoration; it should retain meaning.
+
+> Warning: A palette that looks balanced in light mode may fail contrast in dark mode. Validate both modes with browser accessibility tools.
+

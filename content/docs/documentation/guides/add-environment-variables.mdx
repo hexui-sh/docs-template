@@ -1,0 +1,56 @@
+---
+title: Add Environment Variables
+description: Define, validate, document, and deploy public or server-only configuration values.
+---
+
+## 1. Classify the value
+
+Use a server-only variable for secrets. Use `NEXT_PUBLIC_` only when browser code must read a non-sensitive value.
+
+## 2. Create the local file
+
+```bash title=".env.local"
+DOCS_SEARCH_TOKEN=secret-value
+NEXT_PUBLIC_SUPPORT_URL=https://support.example.com
+```
+
+## 3. Document the contract
+
+```bash title=".env.example"
+DOCS_SEARCH_TOKEN=
+NEXT_PUBLIC_SUPPORT_URL=https://support.example.com
+```
+
+Commit `.env.example`; never commit `.env.local`.
+
+## 4. Validate at startup
+
+```ts title="lib/env.ts"
+function required(name: string): string {
+  const value = process.env[name];
+  if (!value) throw new Error(`Missing environment variable: ${name}`);
+  return value;
+}
+
+export const env = {
+  searchToken: required("DOCS_SEARCH_TOKEN"),
+  supportUrl: process.env.NEXT_PUBLIC_SUPPORT_URL ?? "/support",
+};
+```
+
+Import server secrets only from server modules. A dedicated validation library is worthwhile as the schema grows.
+
+## 5. Configure hosting
+
+Add the same names in the deployment platform's environment settings for preview and production. Redeploy because environment variables are usually captured at build or process start.
+
+## 6. Verify
+
+```bash
+pnpm build
+```
+
+Test both the configured path and the missing-variable failure.
+
+> Warning: Renaming a variable is a deployment migration. Add the new value in every environment before removing the old code path.
+

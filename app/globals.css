@@ -1,0 +1,434 @@
+@import "tailwindcss";
+@import "./typeset.css";
+
+.typeset-docs {
+  --font-geist: var(--font-geist-sans);
+  --typeset-font-body: var(--font-geist);
+  --typeset-font-heading: var(--font-geist);
+  --typeset-font-mono: var(--font-geist-mono);
+  --typeset-size: 16px;
+  --typeset-leading: 1.75;
+  --typeset-flow: 1.25em;
+}
+
+.typeset-docs :where(h1, h2)>a {
+  text-decoration: none;
+}
+
+.typeset-docs :where(h1, h2) {
+  margin-block-start: calc(var(--typeset-flow) * 1.75);
+}
+
+.typeset-docs :where(h3, h4) {
+  margin-block-start: calc(var(--typeset-flow) * 1.5);
+}
+
+.typeset-docs :where(h5, h6) {
+  margin-block-start: calc(var(--typeset-flow) * 1.25);
+}
+
+.typeset-docs > :where(h2:first-child) {
+  margin-block-start: 0;
+}
+
+@import "fumadocs-ui/css/neutral.css";
+@import "fumadocs-ui/css/preset.css";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+/*
+ ---break---
+ */
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-heading: var(--font-geist-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/*
+ * Max width of the documentation layout (sidebar + content + TOC).
+ * Uncomment to make the layout wider/narrower.
+ */
+/* :root {
+  --fd-layout-width: 1400px;
+} */
+
+/*
+ * Fumadocs UI's mobile sidebar drawer (#nd-sidebar-mobile) is docked to the
+ * end/right edge and slides in from there by default. Flip it to the
+ * start/left edge instead: the ID selector's specificity is enough to win
+ * over the library's utility classes, and scoping the offset variable to
+ * this element (rather than overriding it on `:root`) re-points the slide
+ * direction without touching the `[dir='rtl']` behavior elsewhere.
+ */
+#nd-sidebar-mobile {
+  inset-inline-start: 0;
+  inset-inline-end: auto;
+  border-inline-start-width: 0;
+  border-inline-end-width: 1px;
+  --fd-sidebar-drawer-offset: -100%;
+}
+
+/*
+ * Hide the scrollbar while preserving scrolling. Used by the documentation
+ * category tabs so they can scroll horizontally on small screens without a
+ * visible scrollbar.
+ */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/*
+ * MDX surfaces
+ *
+ * Content components communicate hierarchy with background tones instead of
+ * shadows or outlines. The four tones keep nested and interactive states
+ * readable in both themes without turning the article into a stack of cards.
+ */
+.mdx-content {
+  --mdx-surface-subtle: oklch(0.985 0 0);
+  --mdx-surface: oklch(0.97 0 0);
+  --mdx-surface-strong: oklch(0.945 0 0);
+  --mdx-surface-hover: oklch(0.925 0 0);
+}
+
+.dark .mdx-content {
+  --mdx-surface-subtle: oklch(0.18 0 0);
+  --mdx-surface: oklch(0.205 0 0);
+  --mdx-surface-strong: oklch(0.235 0 0);
+  --mdx-surface-hover: oklch(0.269 0 0);
+}
+
+/* Remove elevation from every Fumadocs primitive rendered inside MDX. */
+.mdx-content :where(.shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl) {
+  box-shadow: none;
+}
+
+/* Code */
+.mdx-content .mdx-code-block,
+.mdx-content .mdx-code-tabs {
+  border: 0;
+  background: var(--mdx-surface);
+  box-shadow: none;
+}
+
+.mdx-content .mdx-code-block> :where(div:first-child, figcaption:first-child) {
+  border-color: transparent;
+}
+
+.mdx-content .mdx-code-block .mdx-code-copy-button:hover {
+  background: var(--mdx-surface-strong);
+}
+
+.mdx-content .mdx-code-tabs>[role="tablist"] {
+  background: var(--mdx-surface-strong);
+}
+
+/* Callouts */
+.mdx-content .mdx-callout {
+  border: 0;
+  background: color-mix(in oklab,
+      var(--callout-color) 9%,
+      var(--mdx-surface));
+  padding: 1rem;
+  box-shadow: none;
+}
+
+.mdx-content .mdx-callout>[role="none"] {
+  display: none;
+}
+
+/* Cards */
+.mdx-content .mdx-cards {
+  gap: 0.75rem;
+}
+
+.mdx-content .mdx-card {
+  border: 0;
+  background: var(--mdx-surface);
+  padding: 1.125rem;
+  box-shadow: none;
+}
+
+.mdx-content .mdx-card[href]:hover {
+  background: var(--mdx-surface-strong);
+}
+
+.mdx-content .mdx-card>div:first-child {
+  border: 0;
+  background: var(--mdx-surface-strong);
+  box-shadow: none;
+}
+
+/* Accordions */
+.mdx-content .mdx-accordions {
+  border: 0;
+  background: var(--mdx-surface);
+  box-shadow: none;
+}
+
+.mdx-content .mdx-accordions>* {
+  border: 0;
+}
+
+.mdx-content .mdx-accordions>[data-state="open"] {
+  background: var(--mdx-surface-strong);
+}
+
+.mdx-content .mdx-accordions h3:hover {
+  background: var(--mdx-surface-strong);
+}
+
+/* Tabs */
+.mdx-content .mdx-tabs {
+  border: 0;
+  background: var(--mdx-surface);
+  box-shadow: none;
+}
+
+.mdx-content .mdx-tabs>[role="tablist"] {
+  gap: 0.25rem;
+  padding: 0.375rem;
+}
+
+.mdx-content .mdx-tabs [role="tab"] {
+  border: 0;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.mdx-content .mdx-tabs [role="tab"][data-state="active"] {
+  background: var(--mdx-surface-strong);
+}
+
+.mdx-content .mdx-tabs [role="tabpanel"] {
+  background: var(--mdx-surface-subtle);
+}
+
+/* File trees */
+.mdx-content .mdx-files {
+  border: 0;
+  background: var(--mdx-surface);
+}
+
+.mdx-content :where(.mdx-file, .mdx-folder):hover {
+  background: var(--mdx-surface-strong);
+}
+
+.mdx-content .mdx-folder [data-state="open"]+[data-state="open"] {
+  background: var(--mdx-surface-subtle);
+  border: 0;
+  border-radius: 0.5rem;
+}
+
+/* Steps */
+.mdx-content .fd-steps {
+  border: 0;
+}
+
+.mdx-content .fd-step::before {
+  background: var(--mdx-surface-strong);
+}
+
+/* Type tables */
+.mdx-content .mdx-type-table {
+  border: 0;
+  background: var(--mdx-surface);
+  box-shadow: none;
+}
+
+.mdx-content .mdx-type-table>[data-state] {
+  border: 0;
+  box-shadow: none;
+}
+
+.mdx-content .mdx-type-table>[data-state="open"] {
+  background: var(--mdx-surface-subtle);
+}
+
+.mdx-content .mdx-type-table>[data-state]>button:hover {
+  background: var(--mdx-surface-strong);
+}
+
+.mdx-content .mdx-type-table [data-state="open"]>div {
+  border: 0;
+}
+
+/* Native MDX blocks */
+.mdx-content :where(:not(pre) > code),
+.mdx-content kbd {
+  border: 0;
+  background: var(--mdx-surface-strong);
+  box-shadow: none;
+}
+
+.mdx-content blockquote,
+.mdx-content details {
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--mdx-surface);
+  padding: 1rem 1.125rem;
+}
+
+.mdx-content .mdx-table-wrap {
+  overflow-x: auto;
+  margin-block-start: var(--typeset-flow);
+  border-radius: var(--radius);
+  background: var(--mdx-surface);
+}
+
+.mdx-content .mdx-table {
+  width: 100%;
+  margin-block-start: 0;
+  border: 0;
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+}
+
+.mdx-content .mdx-table thead {
+  background: var(--mdx-surface-strong);
+}
+
+.mdx-content .mdx-table :where(th, td) {
+  border: 0;
+  padding-inline: 1rem;
+}
+
+.mdx-content .mdx-table tbody tr:nth-child(even) {
+  background: var(--mdx-surface-subtle);
+}
+
+/*
+ ---break---
+ */
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+/*
+ ---break---
+ */
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+/*
+ ---break---
+ */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  html {
+    @apply font-sans;
+  }
+}
