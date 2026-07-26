@@ -31,6 +31,39 @@ pnpm dev
 pnpm build
 ```
 
+## Directory Structure
+
+```text
+docs-template/
+├── app/                        # Next.js routes, layout, global CSS, and API handlers
+│   ├── [[...slug]]/page.tsx    # Resolves every documentation URL
+│   ├── api/search/route.ts     # Full-text search endpoint
+│   ├── layout.tsx              # Root HTML, providers, and default metadata
+│   ├── not-found.tsx           # 404 route
+│   └── globals.css             # Tailwind imports and theme tokens
+├── components/                 # Reusable React components used by routes and MDX
+│   └── ui/                     # Application-owned UI primitives (e.g. Button)
+├── content/docs/                # Documentation collections
+│   ├── documentation/          # Guides, features, customization docs
+│   ├── api-reference/          # API reference docs
+│   └── meta.json               # Navigation metadata
+├── lib/                         # Site configuration, content loader, and helpers
+│   ├── site-config.ts          # Branding and global-link source of truth
+│   ├── docs-collections.ts     # Top-level collections and redirects
+│   ├── source.ts               # Generated Fumadocs source
+│   └── layout.shared.tsx       # Layout options derived from site configuration
+├── public/                       # Static files served from `/`
+├── patches/                      # pnpm dependency patches
+├── source.config.ts              # Defines the `content/docs` collection
+├── mdx-components.tsx             # Registers components available in all MDX
+├── next.config.ts                 # Next.js configuration wrapped with createMDX()
+├── components.json                 # shadcn component aliases and styling choices
+├── tsconfig.json                   # Strict TypeScript and `@/*` aliases
+└── package.json                    # Commands and dependencies
+```
+
+> More details are available in [Project Structure](./content/docs/documentation/project-structure.mdx).
+
 ## Adding a Document
 
 You can add a new document by creating an MDX file in `content/docs/`.
